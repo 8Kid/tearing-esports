@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Tearing Esports | Rocket League</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #05070d;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(
+          circle at 80% 15%,
+          rgba(0, 120, 255, 0.18),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 10% 80%,
+          rgba(0, 70, 180, 0.12),
+          transparent 30%
+        );
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
+
+      background: rgba(3, 5, 10, 0.90);
+      backdrop-filter: blur(12px);
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 7%;
+      z-index: 100;
+
+      border-bottom: 1px solid rgba(0, 140, 255, 0.2);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .mini-logo {
+      width: 38px;
+      height: 38px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 28px;
+    }
+
+    nav a {
+      color: #aaa;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+
+      transition: 0.25s;
+    }
+
+    nav a:hover {
+      color: #008cff;
+    }
+
+
+    /* =========================
+       LOGO
+    ========================= */
+
+    .logo {
+      width: 180px;
+      height: 180px;
+
+      filter:
+        drop-shadow(0 0 15px rgba(0, 140, 255, 0.45))
+        drop-shadow(0 0 35px rgba(0, 100, 255, 0.25));
+    }
+
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 100vh;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
+      padding: 100px 20px 50px;
+
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+
+      position: absolute;
+
+      width: 500px;
+      height: 500px;
+
+      background: rgba(0, 120, 255, 0.08);
+
+      filter: blur(100px);
+
+      border-radius: 50%;
+
+      z-index: -1;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 10vw, 90px);
+
+      font-weight: 1000;
+
+      letter-spacing: 8px;
+
+      margin-top: 15px;
+    }
+
+    .hero h1 span {
+      color: #008cff;
+    }
+
+    .subtitle {
+      color: #aaa;
+
+      margin-top: 15px;
+
+      font-size: 16px;
+
+      letter-spacing: 4px;
+
+      text-transform: uppercase;
+    }
+
+    .rocket-league {
+      margin-top: 8px;
+
+      color: #008cff;
+
+      font-weight: bold;
+
+      letter-spacing: 1px;
+    }
+
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .buttons {
+      display: flex;
+
+      gap: 14px;
+
+      margin-top: 35px;
+
+      flex-wrap: wrap;
+
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 14px 25px;
+
+      border-radius: 8px;
+
+      text-decoration: none;
+
+      font-weight: 900;
+
+      transition: 0.25s;
+
+      border: 1px solid #008cff;
+    }
+
+    .btn-primary {
+      background: #008cff;
+
+      color: white;
+    }
+
+    .btn-secondary {
+      color: white;
+
+      background: transparent;
+    }
+
+    .btn-discord {
+      background: #5865F2;
+
+      border-color: #5865F2;
+
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+
+      box-shadow:
+        0 0 25px rgba(0, 140, 255, 0.3);
+    }
+
+    .btn-discord:hover {
+      box-shadow:
+        0 0 25px rgba(88, 101, 242, 0.5);
+    }
+
+
+    /* =========================
+       SECTIONS
+    ========================= */
+
+    section {
+      padding: 100px 7%;
+    }
+
+    .section-title {
+      font-size: 38px;
+
+      margin-bottom: 12px;
+
+      text-align: center;
+    }
+
+    .section-title span {
+      color: #008cff;
+    }
+
+    .section-description {
+      text-align: center;
+
+      color: #888;
+
+      margin-bottom: 50px;
+    }
+
+
+    /* =========================
+       TEAM
+    ========================= */
+
+    .team-grid {
+      max-width: 850px;
+
+      margin: auto;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(230px, 1fr));
+
+      gap: 22px;
+    }
+
+    .player-card {
+      background:
+        linear-gradient(
+          145deg,
+          #0c111b,
+          #070a10
+        );
+
+      border: 1px solid #182536;
+
+      border-radius: 16px;
+
+      padding: 30px 20px;
+
+      text-align: center;
+
+      transition: 0.3s;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    .player-card::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 3px;
+
+      background: #008cff;
+    }
+
+    .player-card:hover {
+      transform: translateY(-7px);
+
+      border-color: #008cff;
+    }
+
+    .player-icon {
+      width: 80px;
+      height: 80px;
+
+      margin: 0 auto 18px;
+
+      border-radius: 50%;
+
+      background: #090d15;
+
+      border: 2px solid #008cff;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      font-size: 28px;
+
+      font-weight: 900;
+
+      color: #008cff;
+    }
+
+    .player-name {
+      font-size: 23px;
+
+      font-weight: 900;
+    }
+
+    .role {
+      margin-top: 8px;
+
+      color: #777;
+
+      font-size: 13px;
+
+      text-transform: uppercase;
+
+      letter-spacing: 2px;
+    }
+
+
+    /* =========================
+       ABOUT
+    ========================= */
+
+    .about {
+      max-width: 800px;
+
+      margin: auto;
+
+      text-align: center;
+    }
+
+    .about p {
+      color: #aaa;
+
+      line-height: 1.8;
+
+      font-size: 17px;
+    }
+
+
+    /* =========================
+       SOCIALS
+    ========================= */
+
+    .social-grid {
+      max-width: 750px;
+
+      margin: auto;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
+      gap: 20px;
+    }
+
+    .social-box {
+      background:
+        linear-gradient(
+          145deg,
+          #0b111b,
+          #070a10
+        );
+
+      border: 1px solid #182536;
+
+      border-radius: 18px;
+
+      padding: 35px 25px;
+
+      text-align: center;
+
+      transition: 0.3s;
+    }
+
+    .social-box:hover {
+      transform: translateY(-5px);
+
+      border-color: #008cff;
+    }
+
+    .social-icon {
+      font-size: 40px;
+
+      margin-bottom: 15px;
+    }
+
+    .social-box h3 {
+      font-size: 20px;
+    }
+
+    .social-box p {
+      color: #888;
+
+      margin-top: 8px;
+
+      margin-bottom: 20px;
+    }
+
+    .social-button {
+      display: inline-block;
+
+      padding: 13px 22px;
+
+      border-radius: 8px;
+
+      color: white;
+
+      text-decoration: none;
+
+      font-weight: 900;
+
+      transition: 0.25s;
+    }
+
+    .tiktok-button {
+      background: #111;
+
+      border: 1px solid #444;
+    }
+
+    .discord-button {
+      background: #5865F2;
+
+      border: 1px solid #5865F2;
+    }
+
+    .social-button:hover {
+      transform: scale(1.04);
+    }
+
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      text-align: center;
+
+      padding: 35px 20px;
+
+      border-top: 1px solid #151c28;
+
+      color: #666;
+
+      font-size: 13px;
+    }
+
+    footer strong {
+      color: #008cff;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 650px) {
+
+      nav {
+        padding: 0 20px;
+      }
+
+      nav ul {
+        display: none;
+      }
+
+      .hero h1 {
+        letter-spacing: 4px;
+      }
+
+      section {
+        padding: 75px 20px;
+      }
+
+      .logo {
+        width: 145px;
+        height: 145px;
+      }
+
+      .buttons {
+        flex-direction: column;
+
+        width: 100%;
+
+        max-width: 300px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
+
+  <nav>
+
+    <div class="nav-logo">
+
+      <!-- TEARING T LOGO -->
+
+      <svg
+        class="mini-logo"
+        viewBox="0 0 100 100">
+
+        <polygon
+          points="15,12 85,12 78,30 58,30 52,88 30,88 37,30 8,30"
+          fill="#008cff"
+        />
+
+        <!-- KRATZER -->
+
+        <polygon
+          points="48,40 82,23 77,36 55,52"
+          fill="#ffffff"
+        />
+
+      </svg>
+
+      TEARING
+
+    </div>
+
+
+    <ul>
+
+      <li>
+        <a href="#home">HOME</a>
+      </li>
+
+      <li>
+        <a href="#team">TEAM</a>
+      </li>
+
+      <li>
+        <a href="#about">ABOUT</a>
+      </li>
+
+      <li>
+        <a href="#socials">SOCIALS</a>
+      </li>
+
+    </ul>
+
+  </nav>
+
+
+
+  <!-- =========================
+       HERO
+  ========================= -->
+
+  <main
+    id="home"
+    class="hero">
+
+
+    <!-- GROSSES TEARING LOGO -->
+
+    <svg
+      class="logo"
+      viewBox="0 0 100 100">
+
+      <polygon
+        points="15,12 85,12 78,30 58,30 52,88 30,88 37,30 8,30"
+        fill="#008cff"
+      />
+
+      <!-- WEISSER KRATZER -->
+
+      <polygon
+        points="48,40 82,23 77,36 55,52"
+        fill="#ffffff"
+      />
+
+      <!-- SCHWARZER SCHNITT -->
+
+      <polygon
+        points="50,48 72,38 68,48 54,56"
+        fill="#07101c"
+      />
+
+    </svg>
+
+
+    <h1>
+      TEARING
+      <span>ESPORTS</span>
+    </h1>
+
+
+    <p class="subtitle">
+      Rocket League Esports
+    </p>
+
+
+    <p class="rocket-league">
+      COMPETE • IMPROVE • DOMINATE
+    </p>
+
+
+    <div class="buttons">
+
+      <a
+        class="btn btn-primary"
+        href="#team">
+
+        UNSER TEAM
+
+      </a>
+
+
+      <a
+        class="btn btn-secondary"
+        href="https://www.tiktok.com/@tearing.esports"
+        target="_blank">
+
+        🎵 TIKTOK
+
+      </a>
+
+
+      <a
+        class="btn btn-discord"
+        href="https://discord.gg/pEvpgznPPj"
+        target="_blank">
+
+        💬 DISCORD
+
+      </a>
+
+    </div>
+
+  </main>
+
+
+
+  <!-- =========================
+       TEAM
+  ========================= -->
+
+  <section id="team">
+
+    <h2 class="section-title">
+      UNSER
+      <span>TEAM</span>
+    </h2>
+
+
+    <p class="section-description">
+      Das aktuelle Rocket-League-Roster von Tearing Esports.
+    </p>
+
+
+    <div class="team-grid">
+
+
+      <!-- ATOM -->
+
+      <div class="player-card">
+
+        <div class="player-icon">
+          A
+        </div>
+
+        <div class="player-name">
+          Atom
+        </div>
+
+        <div class="role">
+          Player
+        </div>
+
+      </div>
+
+
+      <!-- NYX.BEAR -->
+
+      <div class="player-card">
+
+        <div class="player-icon">
+          N
+        </div>
+
+        <div class="player-name">
+          nyx.bear
+        </div>
+
+        <div class="role">
+          Player
+        </div>
+
+      </div>
+
+
+      <!-- OWNER -->
+
+      <div class="player-card">
+
+        <div class="player-icon">
+          8
+        </div>
+
+        <div class="player-name">
+          8Kid
+        </div>
+
+        <div class="role">
+          Owner
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       ABOUT
+  ========================= -->
+
+  <section id="about">
+
+    <div class="about">
+
+      <h2 class="section-title">
+
+        ÜBER
+        <span>TEARING</span>
+
+      </h2>
+
+
+      <p>
+
+        Tearing Esports ist ein Rocket-League-Team
+        mit dem Ziel, sich kontinuierlich
+        weiterzuentwickeln, gemeinsam stärker zu
+        werden und auf dem Spielfeld alles zu geben.
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       SOCIALS
+  ========================= -->
+
+  <section id="socials">
+
+
+    <h2 class="section-title">
+
+      FOLLOW
+      <span>US</span>
+
+    </h2>
+
+
+    <p class="section-description">
+
+      Verpasst keine neuen Clips, Updates
+      und Team-News.
+
+    </p>
+
+
+    <div class="social-grid">
+
+
+      <!-- TIKTOK -->
+
+      <div class="social-box">
+
+        <div class="social-icon">
+          🎵
+        </div>
+
+        <h3>
+          TikTok
+        </h3>
+
+        <p>
+          @tearing.esports
+        </p>
+
+
+        <a
+          class="social-button tiktok-button"
+          href="https://www.tiktok.com/@tearing.esports"
+          target="_blank">
+
+          TIKTOK ÖFFNEN
+
+        </a>
+
+      </div>
+
+
+
+      <!-- DISCORD -->
+
+      <div class="social-box">
+
+        <div class="social-icon">
+          💬
+        </div>
+
+        <h3>
+          Discord
+        </h3>
+
+        <p>
+          Tritt unserem Server bei!
+        </p>
+
+
+        <a
+          class="social-button discord-button"
+          href="https://discord.gg/pEvpgznPPj"
+          target="_blank">
+
+          DISCORD BEITRETEN
+
+        </a>
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    © 2026
+    <strong>TEARING ESPORTS</strong>
+    — Rocket League
+
+  </footer>
+
+
+</body>
+</html>
